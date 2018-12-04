@@ -3,26 +3,11 @@
 let { exec } = require('child_process')
 let { promisify } = require('util')
 let fs = require('fs')
+let path = require('path')
 
 exec = promisify(exec)
 
-let config = `
-module.exports = {
-  extends: ['prettier'],
-  plugins: ['prettier', 'babel'],
-  parser: 'babel-eslint',
-  rules: {
-    'prettier/prettier': [
-      1,
-      {
-        semi: false,
-        singleQuote: true,
-        trailingComma: 'all',
-      },
-    ],
-  },
-}
-`.trim()
+let config = fs.readFileSync(path.join(__dirname, '.eslintrc.js'))
 
 let deps = [
   'babel-eslint',
