@@ -2,12 +2,12 @@
 
 let { exec } = require('child_process')
 let { promisify } = require('util')
-let fs = require('fs')
+let fs = require('fs-extra')
 let path = require('path')
 
 exec = promisify(exec)
 
-let config = fs.readFileSync(path.join(__dirname, '.eslintrc.js'))
+let config = fs.readJsonSync(path.join(__dirname, '.eslintrc'))
 
 let deps = [
   'babel-eslint',
@@ -18,9 +18,13 @@ let deps = [
   'prettier',
 ].join(' ')
 
-console.log('creating .eslintrc.js')
+console.log('writing config to package.json')
 
-fs.writeFile('.eslintrc.js', config, async () => {
+const pkgPath = path.join(process.cwd(), 'package.json')
+const pkg = require(pkgPath)
+pkg.eslint = config
+
+fs.writeJson(pkgPath, pkg, { spaces: 2 }, async () => {
   console.log('Installing prettier & eslint modules')
   if (fs.existsSync('yarn.lock')) {
     await exec(`yarn add -D ${deps}`)
