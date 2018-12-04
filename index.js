@@ -3,6 +3,7 @@
 let { exec } = require('child_process')
 let { promisify } = require('util')
 let fs = require('fs')
+const Ora = require('ora')
 
 exec = promisify(exec)
 
@@ -52,11 +53,13 @@ if (packageJSON.workspaces) {
 console.log('Creating .eslintrc.js...')
 
 fs.writeFile('.eslintrc.js', config, async () => {
-  console.log('Installing prettier & eslint modules...')
+  const spinner = new Ora('Installing prettier & eslint modules...')
+  spinner.start()
   if (fs.existsSync('yarn.lock')) {
     await exec(`yarn add -D ${addWorkspaceFlag && '-W'} ${deps}`)
   } else {
     await exec(`npm i --dev ${deps}`)
   }
+  spinner.succeed()
   console.log(`🎉 prettier and eslint configured!`)
 })
