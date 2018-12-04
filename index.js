@@ -33,12 +33,20 @@ let deps = [
   'prettier',
 ].join(' ')
 
-let addWorkspaceFlag = false;
+let addWorkspaceFlag = false
+
+// Handle Lerna monorepos
 if (fs.existsSync('lerna.json')) {
   console.log('Lerna monorepo detected...')
-  const lernaConfig = fs.readFileSync('lerna.json', 'utf8')
-  const { useWorkspaces } = JSON.parse(lernaConfig)
-  addWorkspaceFlag = useWorkspaces
+  const lernaConfig = JSON.parse(fs.readFileSync('lerna.json', 'utf8'))
+  addWorkspaceFlag = lernaConfig.useWorkspaces
+}
+
+// Handle Yarn workspaces
+const packageJSON = JSON.parse(fs.readFileSync('package.json', 'utf8'))
+if (packageJSON.workspaces) {
+  console.log('Yarn workspaces detected...')
+  addWorkspaceFlag = true
 }
 
 console.log('Creating .eslintrc.js...')
