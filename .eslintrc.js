@@ -1,6 +1,5 @@
-
 module.exports = {
-  extends: ['prettier', 'react-app'],
+  extends: ['prettier'],
   plugins: ['prettier', 'babel'],
   parser: 'babel-eslint',
   rules: {
@@ -14,4 +13,3 @@ module.exports = {
     ],
   },
 }
-
