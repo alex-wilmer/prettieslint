@@ -1,6 +1,6 @@
 {
   "name": "prettieslint",
-  "version": "0.1.11",
+  "version": "0.2.1",
   "description": "Add prettier + eslint to your project",
   "repository": {
     "type": "git",
