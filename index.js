@@ -33,12 +33,20 @@ let deps = [
   'prettier',
 ].join(' ')
 
+let addWorkspaceFlag = false;
+if (fs.existsSync('lerna.json')) {
+  console.log('Lerna monorepo detected')
+  const lernaConfig = fs.readFileSync('lerna.json', 'utf8')
+  const { useWorkspaces } = JSON.parse(lernaConfig)
+  addWorkspaceFlag = useWorkspaces
+}
+
 console.log('creating .eslintrc.js')
 
 fs.writeFile('.eslintrc.js', config, async () => {
   console.log('Installing prettier & eslint modules')
   if (fs.existsSync('yarn.lock')) {
-    await exec(`yarn add -D ${deps}`)
+    await exec(`yarn add -D ${addWorkspaceFlag && '-W'} ${deps}`)
   } else {
     await exec(`npm i --dev ${deps}`)
   }
